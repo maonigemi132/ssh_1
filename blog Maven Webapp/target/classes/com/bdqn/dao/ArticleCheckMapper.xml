@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.dao.ArticleCheckMapper">
+  <resultMap id="BaseResultMap" type="com.bdqn.entity.ArticleCheck">
+    <id column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="article_uuid" jdbcType="VARCHAR" property="articleUuid" />
+    <result column="checkTime" jdbcType="TIMESTAMP" property="checktime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="event" jdbcType="VARCHAR" property="event" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    uuid, article_uuid, checkTime, status, event
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from articlecheck
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from articlecheck
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bdqn.entity.ArticleCheck">
+    insert into articlecheck (uuid, article_uuid, checkTime, 
+      status, event)
+    values (#{uuid,jdbcType=VARCHAR}, #{articleUuid,jdbcType=VARCHAR}, #{checktime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=VARCHAR}, #{event,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdqn.entity.ArticleCheck">
+    insert into articlecheck
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uuid != null">
+        uuid,
+      </if>
+      <if test="articleUuid != null">
+        article_uuid,
+      </if>
+      <if test="checktime != null">
+        checkTime,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="event != null">
+        event,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uuid != null">
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="articleUuid != null">
+        #{articleUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="checktime != null">
+        #{checktime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="event != null">
+        #{event,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdqn.entity.ArticleCheck">
+    update articlecheck
+    <set>
+      <if test="articleUuid != null">
+        article_uuid = #{articleUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="checktime != null">
+        checkTime = #{checktime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="event != null">
+        event = #{event,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdqn.entity.ArticleCheck">
+    update articlecheck
+    set article_uuid = #{articleUuid,jdbcType=VARCHAR},
+      checkTime = #{checktime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      event = #{event,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  
+  
+  <select id="selectListByArticleId" resultType="string" resultMap="BaseResultMap">
+  	select * from ArticleCheck where article_uuid=#{uuid} order by checkTime desc
+  
+  </select>
+</mapper>

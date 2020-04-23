@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.dao.BannerMapper">
+  <resultMap id="BaseResultMap" type="com.bdqn.entity.Banner">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="mainTitle" jdbcType="VARCHAR" property="maintitle" />
+    <result column="smallTitle" jdbcType="VARCHAR" property="smalltitle" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="user_uuid" jdbcType="VARCHAR" property="userUuid" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bdqn.entity.BannerWithBLOBs">
+    <result column="url" jdbcType="LONGVARCHAR" property="url" />
+    <result column="toUrl" jdbcType="LONGVARCHAR" property="tourl" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, mainTitle, smallTitle, createtime, user_uuid, status
+  </sql>
+  <sql id="Blob_Column_List">
+    url, toUrl
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from banner
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from banner
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bdqn.entity.BannerWithBLOBs">
+    insert into banner (id, mainTitle, smallTitle, 
+      createtime, user_uuid, status, 
+      url, toUrl)
+    values (#{id,jdbcType=INTEGER}, #{maintitle,jdbcType=VARCHAR}, #{smalltitle,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{userUuid,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{url,jdbcType=LONGVARCHAR}, #{tourl,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdqn.entity.BannerWithBLOBs">
+    insert into banner
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="maintitle != null">
+        mainTitle,
+      </if>
+      <if test="smalltitle != null">
+        smallTitle,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="userUuid != null">
+        user_uuid,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="tourl != null">
+        toUrl,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="maintitle != null">
+        #{maintitle,jdbcType=VARCHAR},
+      </if>
+      <if test="smalltitle != null">
+        #{smalltitle,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userUuid != null">
+        #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tourl != null">
+        #{tourl,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdqn.entity.BannerWithBLOBs">
+    update banner
+    <set>
+      <if test="maintitle != null">
+        mainTitle = #{maintitle,jdbcType=VARCHAR},
+      </if>
+      <if test="smalltitle != null">
+        smallTitle = #{smalltitle,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userUuid != null">
+        user_uuid = #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tourl != null">
+        toUrl = #{tourl,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bdqn.entity.BannerWithBLOBs">
+    update banner
+    set mainTitle = #{maintitle,jdbcType=VARCHAR},
+      smallTitle = #{smalltitle,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      user_uuid = #{userUuid,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      url = #{url,jdbcType=LONGVARCHAR},
+      toUrl = #{tourl,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdqn.entity.Banner">
+    update banner
+    set mainTitle = #{maintitle,jdbcType=VARCHAR},
+      smallTitle = #{smalltitle,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      user_uuid = #{userUuid,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectListBanner" parameterType="string" resultMap="ResultMapWithBLOBs">
+  	select * from banner
+  	<where>
+  		<if test="uid!=null and uid!=''">
+  			and user_uuid=#{uid}
+  		</if>
+  		<if test="status!=null">
+  			and  status=#{status}
+  		</if>
+  	
+  	</where>	
+  	order by createtime desc
+  </select>
+</mapper>

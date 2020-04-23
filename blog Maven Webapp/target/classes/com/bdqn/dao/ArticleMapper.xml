@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.dao.ArticleMapper">
+  <resultMap id="BaseResultMap" type="com.bdqn.entity.Article">
+    <id column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="awesome" jdbcType="INTEGER" property="awesome" />
+    <result column="reader" jdbcType="INTEGER" property="reader" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="articleTypeId" jdbcType="INTEGER" property="articletypeid" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="summary" jdbcType="VARCHAR" property="summary" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="userName" jdbcType="VARCHAR" property="userName" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bdqn.entity.ArticleWithBLOBs">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="cover" jdbcType="LONGVARCHAR" property="cover" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    uuid, title, type, awesome, reader, createtime, articleTypeId, status, summary, user_id
+  </sql>
+  <sql id="Blob_Column_List">
+    content, cover
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from article
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bdqn.entity.ArticleWithBLOBs">
+    insert into article (uuid, title, type, 
+      awesome, reader, createtime, 
+      articleTypeId, status, summary, 
+      user_id, content, cover
+      )
+    values (#{uuid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{awesome,jdbcType=INTEGER}, #{reader,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{articletypeid,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{summary,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{cover,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdqn.entity.ArticleWithBLOBs">
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uuid != null">
+        uuid,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="awesome != null">
+        awesome,
+      </if>
+      <if test="reader != null">
+        reader,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="articletypeid != null">
+        articleTypeId,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="summary != null">
+        summary,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="cover != null">
+        cover,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uuid != null">
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="awesome != null">
+        #{awesome,jdbcType=INTEGER},
+      </if>
+      <if test="reader != null">
+        #{reader,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articletypeid != null">
+        #{articletypeid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="summary != null">
+        #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="cover != null">
+        #{cover,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdqn.entity.ArticleWithBLOBs">
+    update article
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="awesome != null">
+        awesome = #{awesome,jdbcType=INTEGER},
+      </if>
+      <if test="reader != null">
+        reader = #{reader,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articletypeid != null">
+        articleTypeId = #{articletypeid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="summary != null">
+        summary = #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="cover != null">
+        cover = #{cover,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bdqn.entity.ArticleWithBLOBs">
+    update article
+    set title = #{title,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      awesome = #{awesome,jdbcType=INTEGER},
+      reader = #{reader,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      articleTypeId = #{articletypeid,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      summary = #{summary,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR},
+      cover = #{cover,jdbcType=LONGVARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdqn.entity.Article">
+    update article
+    set title = #{title,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      awesome = #{awesome,jdbcType=INTEGER},
+      reader = #{reader,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      articleTypeId = #{articletypeid,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      summary = #{summary,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+	<select id="selectCount" parameterType="int" resultType="int">
+		select count(0) from article a
+		<where>
+			<if test="tid">
+				and a.articleTypeId=#{tid}
+			</if>
+			<if test="type!=null">
+				and a.type=#{type}
+			</if>
+			<if test="1==1">
+				and a.status=0
+			</if>
+		</where>
+	</select>
+
+
+
+
+	<select id="selectList" resultMap="ResultMapWithBLOBs">
+		select
+		a.uuid, a.title, a.type, a.awesome, a.reader, a.createtime, a.articleTypeId,
+		a.status, a.summary, a.user_id,a.cover
+		,u.name as userName from article a inner join user u on a.user_id=u.uuid
+		<where>
+			<if test="tid">
+				and a.articleTypeId=#{tid}
+			</if>
+			<if test="type!=null">
+				and a.type=#{type}
+			</if>
+			<if test="1==1">
+				and a.status=0
+			</if>
+		</where>
+		order by a.awesome desc,a.reader desc,a.createtime desc
+		limit #{start},#{row}
+	</select>
+
+
+	<sql id="sql1">
+		<where>
+			<if test="startTime!=null">
+				and a.createtime >=#{startTime}
+			</if>
+			<if test="endTime!=null">
+  				<![CDATA[ and a.createtime <=#{endTime} 	]]>
+			</if>
+			<if test="title!=null and title!='' ">
+				and a.title like concat('%',#{title},'%')
+			</if>
+			<if test="userId!=null and userId!='' ">
+				and a.user_id=#{userId}
+			</if>
+			<if test="statusList!=null">						    
+			    <foreach collection="statusList" item="status" open="and a.status in ("  close=")"  separator=",">
+			    	${status}
+			    </foreach>
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectCount1" resultType="int">
+		select count(0) from article a
+		<include refid="sql1" />
+
+	</select>
+  
+  <select id="selectList1" resultMap="ResultMapWithBLOBs">
+	select
+	a.uuid, a.title, a.type, a.awesome, a.reader, a.createtime, a.articleTypeId,
+	a.status, a.summary, a.user_id,a.cover
+	,u.name as userName from article a inner join user u on a.user_id=u.uuid
+	<include refid="sql1" />
+	limit #{start},#{row}
+  </select>
+  
+  <select id="selectCountByIdAndUserId" resultType="int">
+  		select count(0) from article where uuid=#{uuid} and user_id=#{userId} 
+  </select>
+</mapper>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd"   >
+
+
+	<!-- 扫描注解  -->
+	<context:component-scan base-package="com.bdqn"/>
+	<!-- aop aspectj 自动代理(允许使用注解方式) -->
+	<aop:aspectj-autoproxy/>
+
+	<!--  敏感词过滤组件  可指定具体文件 或文件夹-->
+    <bean  id="sensitiveWordInit"  class="com.bdqn.component.SensitiveWordInit">
+       		<property name="sensitiveFilePath"    value="classpath:SensitiveWordFiles"/>
+       </bean>
+         <bean  id="sensitiveWordFilterBean"  class="com.bdqn.component.SensitivewordFilter">
+       		<property name="sensitiveWordInit"  ref="sensitiveWordInit"/>
+       </bean>
+	
+	<!-- 加载属性文件 -->
+	<bean  id="" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				 <value>classpath:jdbc.properties</value>
+				 <value>classpath:mail.properties</value>
+			</list>
+		</property>
+	</bean>
+
+
+	<!-- 数据源 bean[方便spring 管理]  第三方连接池  dbcp、c3p0、druid....    -->
+	<!-- C3P0 配置数据源 -->
+ 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  >
+		<property name="driverClass" value="${c3p0.driverClass}" />                              <!--连接数据库的驱动类 -->
+		<property name="jdbcUrl" value="${c3p0.jdbcUrl}" />                                      <!--连接数据库的url -->
+		<property name="user" value="${c3p0.user}" />                                            <!--连接数据库的用户名 -->
+		<property name="password" value="${c3p0.password}" />                                    <!--连接数据库的密码 -->
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />                              <!--连接池的最大连接数 -->
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />                              <!--连接池的最小连接数 -->
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />                      <!--初始化连接数 -->
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}" />                              <!--连接的最大空闲时间，超时的连接将被丢弃，单位：秒 -->
+		<property name="checkoutTimeout" value="${c3p0.checkoutTimeout}" />                      <!--没有连接可用时，等待连接的时间，单位：毫秒 -->
+		<!-- 心跳 -->	
+		<property name="testConnectionOnCheckout" value="${c3p0.testConnectionOnCheckout}" />
+		<property name="testConnectionOnCheckin"  value="${c3p0.testConnectionOnCheckin}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+	</bean>
+	<!--配置连接数据源 end-->
+
+
+	<!-- dao 整合mybatis -->
+	<!--sqlSessionFactory  bean  -->
+		<bean id="sqlSessionFactory"  class="org.mybatis.spring.SqlSessionFactoryBean">
+				<property name="dataSource"  ref="dataSource"/>
+				<property name="configLocation" value="classpath:mybatis-cfg.xml" />
+				<property name="mapperLocations">
+					<list>
+							<value>classpath:com/bdqn/dao/**/*.xml</value>
+					</list>
+				</property>
+				<property name="typeAliasesPackage"  value="com.bdqn.entity"/>
+		</bean>
+
+		<!-- dao bean -->
+		<!-- 扫描包下接口 生成实例组件   默认dao的反射生成实例名称就是接口名首字母小写 -->
+		<bean   class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+			<property name="basePackage"  value="com.bdqn.dao"/>
+			<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		</bean>
+		
+		
+
+
+	<!-- aop 切面（事务增强） -->
+	<!--aop  使用spring JDBC 提供的API 管理程序的事务  -->
+	<bean id="txManager"  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource"  ref="dataSource" />
+	</bean>
+	
+	<!-- 定义事务的通知 -->
+	<!-- propagation 事务传播机制 REQUIRED -->
+	<tx:advice transaction-manager="txManager"  id="txAdvice">
+			<tx:attributes>
+				<tx:method name="get*"    	read-only="true" />
+				<tx:method name="load*"    	read-only="true" />
+				<tx:method name="find*"    	read-only="true" />
+				<tx:method name="look*"    	read-only="true" />
+				<tx:method name="check*"    	read-only="true" />
+				<tx:method name="query*"    	read-only="true" />
+				<tx:method name="read*"    	read-only="true" />
+				<tx:method name="count*"    	read-only="true" />
+				<tx:method name="select*"    	read-only="true" />
+				
+				<tx:method name="ex*"    propagation="REQUIRED"  rollback-for="java.lang.Exception" />
+				<tx:method name="update*"    propagation="REQUIRED"  rollback-for="java.lang.Exception" />
+				<tx:method name="del*"    	propagation="REQUIRED"  rollback-for="java.lang.Exception"/>
+				<tx:method name="remove"    	propagation="REQUIRED"  rollback-for="java.lang.Exception"/>
+				<tx:method name="insert*"    propagation="REQUIRED"  rollback-for="java.lang.Exception"/>
+				<tx:method name="add*"    	propagation="REQUIRED"  rollback-for="java.lang.Exception"/>
+				<tx:method name="set*"    	propagation="REQUIRED"  rollback-for="java.lang.Exception"/>
+				<tx:method name="execute*"   propagation="REQUIRED"  rollback-for="java.lang.Exception"/>
+				<tx:method name="save*"    	propagation="REQUIRED"  rollback-for="java.lang.Exception"/>
+				
+				<tx:method name="*"    		propagation="REQUIRED"  read-only="true"/>
+			</tx:attributes>
+	</tx:advice>	
+		
+    <aop:config>
+			<aop:pointcut expression="execution(* com.bdqn.service.impl.*.*(..))" id="servicePoint"/>
+			<aop:advisor advice-ref="txAdvice"  pointcut-ref="servicePoint" />
+	</aop:config>
+	
+	
+	
+	
+	
+	
+	<!--JavaMailSender  -->
+	<bean  id="javaMailSender"  class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${mail.host}" />
+   		<property name="port" value="${mail.port}"/>
+   		<property name="username" value="${mail.username}"/>
+   		<property name="password" value="${mail.password}"/>
+   		<property name="protocol"  value="${mail.protocol}"/>
+   		<property name="defaultEncoding" value="${mail.encoding}"/>
+   		<property name="javaMailProperties">
+   			<props>
+   				<prop key="mail.smtp.auth">${mail.auth}</prop>
+   			</props>
+   		</property>
+	</bean>
+	
+	
+	<!-- 定时任务 组件-->
+	<!-- <bean id="testJob"   class="com.bdqn.job.TestJob">
+	</bean> -->
+	
+	<!-- 测试任务 -->
+	<!-- <bean  id="testWorkJob"  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+       <property name="targetObject"  ref="testJob"/>
+	   <property name="targetMethod"  value="testWork"/>
+	</bean> -->
+	
+	<!-- 触发器  -->
+	<!-- <bean id="tetsCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        指定Tirgger绑定的Job
+        <property name="jobDetail" ref="testWorkJob"/>
+        指定Cron 的表达式 ，当前是每隔1s运行一次
+        <property name="cronExpression" value="0/10 * * * * ?" />
+        <property name="cronExpression"  value="0 59 23 L * ?"/>
+    </bean> -->
+    
+    <!-- 调度器 -->
+	<!-- <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="tetsCronTrigger"/>
+            </list>
+        </property>
+    </bean> -->
+	
+
+</beans>	

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration> <!-- 根标签 -->
+	<settings>
+			<!-- 开启驼峰命名 -->
+			  <setting name="mapUnderscoreToCamelCase" value="true"/>
+			  <!-- 设置自动映射 -->
+			  <!-- <setting name="autoMappingBehavior" value="FULL"/> -->
+	</settings>
+	
+</configuration>

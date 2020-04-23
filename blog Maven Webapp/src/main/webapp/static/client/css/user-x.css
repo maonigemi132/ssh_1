@@ -1,0 +1,59 @@
+.site-tree {
+    border-right: 1px solid #eee;
+}
+.site-tree {
+    width: 220px;
+    min-height: 900px;
+    padding: 5px 0 20px;
+}
+.site-tree {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    vertical-align: top;
+
+}
+.site-tree h2{
+    background-color: rgb(242,242,242); font-size: 14px; line-height: 40px;
+    border-left: 3px  rgb(65,148,136) solid; text-indent: 1em;
+}
+.site-tree  li{
+    text-indent: 1em; line-height: 35px;
+}
+.site-tree  li a{ font-size: 13px; color: #333;  }
+.site-tree  li:hover{
+    background-color: rgba(0,0,0,0.4);
+    border-left: 3px  white solid;
+}
+.site-tree  li:hover a{
+    color: white;
+}
+.site-tree-active{
+    background-color: rgb(65,148,136);
+    border-left: 3px  white solid;
+}
+.site-tree .site-tree-active a{
+    color: white;
+}
+.infoTable tr>td:last-child button{
+    margin: 3px;
+}
+.infoTable tr>td:nth-child(3)>div{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+}
+.infoTable tr>td:first-child{
+    text-align: center;
+}
+.infoTable tr>td:first-child img{
+    width: 200px;  cursor: pointer;
+}
+.infoTable tr>td:first-child p{
+   margin-top: 3px;
+}
+
+.layui-layer-iframe  iframe{
+    height: 100%!important;
+}

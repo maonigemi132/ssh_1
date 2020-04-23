@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        https://www.springframework.org/schema/tx/spring-tx.xsd 
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd 
+        http://www.springframework.org/schema/mvc
+        https://www.springframework.org/schema/mvc/spring-mvc.xsd "  >
+
+		<!-- 扫描注解 -->		
+		<context:component-scan base-package="com.bdqn"/>
+		<!-- mvc 注解支持 -->	
+		<mvc:annotation-driven />
+		
+	
+		<!-- 拦截器 -->
+		<mvc:interceptors>
+			<mvc:interceptor>
+				<mvc:mapping path="/**"/>
+				<mvc:exclude-mapping path="/static/**"/><!-- 静态资源方行 -->
+				<mvc:exclude-mapping path="/kaptcha"/><!-- 验证码方行 -->
+				<mvc:exclude-mapping path="/client/*.html"/><!-- 页面方行 -->
+				<mvc:exclude-mapping path="/loginsLive"/>
+				<bean class="com.bdqn.intercept.TokenIntercept"></bean><!-- 拦截器主键 -->
+			</mvc:interceptor>
+		</mvc:interceptors>
+		
+		
+		<mvc:interceptors>
+			<mvc:interceptor>
+				<mvc:mapping path="/client/user-*.html"/>
+				<bean class="com.bdqn.intercept.CheckLoginIntercept"></bean><!-- 拦截器主键 -->
+			</mvc:interceptor>
+		</mvc:interceptors>
+		
+		
+		
+		<!--配置上传的组件  -->
+		<bean name="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+					<property name="defaultEncoding" value="UTF-8"></property>
+					<property name="maxUploadSize"  value="5000000000"/>   <!--限制文件大写  -->
+		</bean>
+		
+		<!-- 静态资源 -->
+		<mvc:resources location="/static/" mapping="/static/**"/>
+		
+		
+		
+		
+		
+		<!-- 视图解析器 -->
+		<bean  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+				<property name="prefix"  value="/WEB-INF/jsp/"></property>
+				<property name="suffix"  value=".jsp"></property>
+		</bean>
+    
+    
+		<!-- springmvc提供的简单异常处理器 -->
+		<!-- <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		    <property name="exceptionMappings">
+		        <props>
+		            <prop key="java.lang.Exception">500</prop>
+		        </props>
+		    </property>
+		</bean> -->
+		
+		
+</beans>

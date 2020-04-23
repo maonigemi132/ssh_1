@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.dao.SettingMapper">
+  <resultMap id="BaseResultMap" type="com.bdqn.entity.Setting">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="Record" jdbcType="VARCHAR" property="record" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bdqn.entity.SettingWithBLOBs">
+    <result column="logoUrl" jdbcType="LONGVARCHAR" property="logourl" />
+    <result column="keywords" jdbcType="LONGVARCHAR" property="keywords" />
+    <result column="descption" jdbcType="LONGVARCHAR" property="descption" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, Record
+  </sql>
+  <sql id="Blob_Column_List">
+    logoUrl, keywords, descption
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from setting
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from setting
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bdqn.entity.SettingWithBLOBs">
+    insert into setting (id, Record, logoUrl, 
+      keywords, descption)
+    values (#{id,jdbcType=INTEGER}, #{record,jdbcType=VARCHAR}, #{logourl,jdbcType=LONGVARCHAR}, 
+      #{keywords,jdbcType=LONGVARCHAR}, #{descption,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdqn.entity.SettingWithBLOBs">
+    insert into setting
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="record != null">
+        Record,
+      </if>
+      <if test="logourl != null">
+        logoUrl,
+      </if>
+      <if test="keywords != null">
+        keywords,
+      </if>
+      <if test="descption != null">
+        descption,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="record != null">
+        #{record,jdbcType=VARCHAR},
+      </if>
+      <if test="logourl != null">
+        #{logourl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="keywords != null">
+        #{keywords,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descption != null">
+        #{descption,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdqn.entity.SettingWithBLOBs">
+    update setting
+    <set>
+      <if test="record != null">
+        Record = #{record,jdbcType=VARCHAR},
+      </if>
+      <if test="logourl != null">
+        logoUrl = #{logourl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="keywords != null">
+        keywords = #{keywords,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descption != null">
+        descption = #{descption,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bdqn.entity.SettingWithBLOBs">
+    update setting
+    set Record = #{record,jdbcType=VARCHAR},
+      logoUrl = #{logourl,jdbcType=LONGVARCHAR},
+      keywords = #{keywords,jdbcType=LONGVARCHAR},
+      descption = #{descption,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdqn.entity.Setting">
+    update setting
+    set Record = #{record,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
